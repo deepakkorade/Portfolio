@@ -1,0 +1,166 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+
+interface Skill {
+  name: string;
+  percentage: number;
+  gradientId: string;
+  colors: { start: string; end: string };
+}
+
+const PRIMARY_SKILLS: Skill[] = [
+  { name: 'React.js', percentage: 90, gradientId: 'reactGrad', colors: { start: '#a855f7', end: '#3b82f6' } },
+  { name: 'Node.js', percentage: 85, gradientId: 'nodeGrad', colors: { start: '#10b981', end: '#06b6d4' } },
+  { name: 'Laravel', percentage: 85, gradientId: 'laravelGrad', colors: { start: '#f43f5e', end: '#a855f7' } },
+  { name: 'MySQL', percentage: 80, gradientId: 'mysqlGrad', colors: { start: '#3b82f6', end: '#06b6d4' } },
+  { name: 'WordPress', percentage: 90, gradientId: 'wpGrad', colors: { start: '#8b5cf6', end: '#f43f5e' } },
+];
+
+const ADDITIONAL_SKILLS = [
+  'JavaScript (ES6+)',
+  'TypeScript',
+  'PHP',
+  'Tailwind CSS',
+  'Bootstrap',
+  'RESTful APIs',
+  'Git & GitHub',
+  'Docker',
+  'MongoDB',
+  'Redux Toolkit',
+  'Express.js',
+];
+
+const CircularSkillCard: React.FC<{ skill: Skill }> = ({ skill }) => {
+  const radius = 46;
+  const strokeWidth = 7;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6 }}
+      className="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 hover:shadow-xl"
+    >
+      {/* Light glow overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-accent-purple/5 to-accent-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+      {/* SVG Ring Container */}
+      <div className="relative w-28 h-28 flex items-center justify-center mb-4">
+        <svg className="w-full h-full transform -rotate-90">
+          <defs>
+            <linearGradient id={skill.gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={skill.colors.start} />
+              <stop offset="100%" stopColor={skill.colors.end} />
+            </linearGradient>
+          </defs>
+          {/* Background Track */}
+          <circle
+            cx="56"
+            cy="56"
+            r={radius}
+            className="stroke-slate-200 dark:stroke-slate-800"
+            strokeWidth={strokeWidth}
+            fill="transparent"
+          />
+          {/* Active Progress */}
+          <motion.circle
+            cx="56"
+            cy="56"
+            r={radius}
+            stroke={`url(#${skill.gradientId})`}
+            strokeWidth={strokeWidth}
+            fill="transparent"
+            strokeDasharray={circumference}
+            initial={{ strokeDashoffset: circumference }}
+            whileInView={{
+              strokeDashoffset: circumference - (skill.percentage / 100) * circumference,
+            }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, ease: 'easeOut', delay: 0.1 }}
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Text Inside Circular chart */}
+        <div className="absolute flex items-center justify-center">
+          <span className="text-xl font-bold text-text-light-primary dark:text-text-dark-primary">
+            {skill.percentage}%
+          </span>
+        </div>
+      </div>
+
+      <h3 className="text-base font-bold text-text-light-primary dark:text-text-dark-primary group-hover:text-accent-purple dark:group-hover:text-accent-purple transition-colors duration-300">
+        {skill.name}
+      </h3>
+    </motion.div>
+  );
+};
+
+export const Skills: React.FC = () => {
+  return (
+    <section id="skills" className="py-20 relative overflow-hidden">
+      <div className="w-[92%] max-w-6xl mx-auto relative z-10">
+        
+        {/* Section Heading */}
+        <div className="text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl sm:text-4xl font-extrabold text-text-light-primary dark:text-text-dark-primary tracking-tight"
+          >
+            My <span className="bg-gradient-to-r from-accent-purple via-accent-cyan to-accent-blue bg-clip-text text-transparent">Expertise</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-text-light-secondary dark:text-text-dark-secondary mt-3 max-w-xl mx-auto text-sm sm:text-base"
+          >
+            Proficiencies and technologies that drive modern digital solutions, from reactive frontend frameworks to high-performance database architectures.
+          </motion.p>
+        </div>
+
+        {/* Circular Progress Bars Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-16">
+          {PRIMARY_SKILLS.map((skill) => (
+            <CircularSkillCard key={skill.name} skill={skill} />
+          ))}
+        </div>
+
+        {/* Additional Skills Tags */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="glass-panel rounded-3xl p-8 text-center"
+        >
+          <h4 className="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-6">
+            Other Tools & Technologies I Use
+          </h4>
+          <div className="flex flex-wrap justify-center gap-3">
+            {ADDITIONAL_SKILLS.map((tech, index) => (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                key={tech}
+                className="px-4 py-2 rounded-xl text-xs sm:text-sm bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/50 dark:hover:bg-slate-800 text-text-light-secondary dark:text-text-dark-secondary hover:text-accent-purple dark:hover:text-accent-purple border border-border-light dark:border-border-dark transition-all duration-300 hover:scale-105"
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+};
+export default Skills;
