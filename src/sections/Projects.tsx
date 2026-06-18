@@ -8,7 +8,7 @@ interface Project {
   description: string;
   image: string;
   tags: string[];
-  category: ('React' | 'Node' | 'Laravel' | 'WordPress')[];
+  category: ('React' | 'Node' | 'Laravel')[];
   liveUrl: string;
   githubUrl: string;
 }
@@ -16,80 +16,49 @@ interface Project {
 const PROJECTS_DATA: Project[] = [
   {
     id: 1,
-    title: 'E-Commerce Admin Dashboard',
-    description: 'A premium full-stack analytical dashboard tracking sales, stock, and orders. Features responsive widgets and theme toggles.',
+    title: 'iDentX Dental Clinic Management SaaS',
+    description: 'Designed and developed a multi-branch dental clinic SaaS platform with 20+ modules including patient management, appointments, prescriptions, billing, and branch-level access control. Implemented scalable backend architecture with soft-delete support across 40+ relational database tables, branch-wise unique PRN generation logic, and secure role-based REST APIs. Optimized API performance by 40% using TanStack Query caching.',
     image: '/project1.png',
-    tags: ['React.js', 'Node.js', 'MySQL', 'Tailwind CSS'],
-    category: ['React', 'Node'],
-    liveUrl: 'https://example.com',
+    tags: ['React.js', 'Laravel', 'TypeScript', 'MySQL', 'TanStack Query', 'REST APIs'],
+    category: ['React', 'Laravel'],
+    liveUrl: 'https://identx.in/',
     githubUrl: 'https://github.com/deepakkorade',
   },
   {
     id: 2,
-    title: 'DevConnect Portal',
-    description: 'A sleek social network platform for developers featuring post feeds, user profiles, real-time messaging, and tech filters.',
+    title: 'BADAPLOT – Real Estate Platform',
+    description: 'Developed a full-stack real estate platform for buying, selling, and renting property listings. Built responsive frontend UI using React 18, Bootstrap 5, and GSAP animations. Integrated Mapbox GL for live property mapping, Google OAuth, RBAC security, reCAPTCHA v3, Razorpay payment gateway, and Chart.js for analytics dashboards.',
     image: '/project2.png',
-    tags: ['React.js', 'Express.js', 'MongoDB', 'Socket.io'],
+    tags: ['React 18', 'Node.js', 'Mapbox GL', 'Razorpay', 'Bootstrap 5', 'GSAP', 'Chart.js'],
     category: ['React', 'Node'],
-    liveUrl: 'https://example.com',
+    liveUrl: 'https://www.badaplot.com/',
     githubUrl: 'https://github.com/deepakkorade',
   },
   {
     id: 3,
-    title: 'Laravel Multi-Tenant SaaS',
-    description: 'A robust Laravel-powered software service with Stripe billing subscription packages, customer domains, and site building dashboards.',
-    image: '/project1.png',
-    tags: ['Laravel', 'PHP', 'MySQL', 'Bootstrap'],
-    category: ['Laravel'],
-    liveUrl: 'https://example.com',
-    githubUrl: 'https://github.com/deepakkorade',
-  },
-  {
-    id: 4,
-    title: 'Agency WordPress Portal',
-    description: 'A bespoke creative agency website built with WordPress, customized Gutenberg blocks, custom post types, and speed optimizations.',
+    title: 'Deccan Wheels CRM – Used Car Dealership Management System',
+    description: 'An enterprise-grade CRM automating used car dealership workflows. Features inquiry and stock management, financial tracking, calendar scheduling, real-time notifications, Excel/PDF exports, multi-language support (i18n), and dark/light themes. Developed frontend with React 18 + TypeScript, Redux Toolkit for state management, Mantine UI, Formik/Yup validation, and ApexCharts for sales analytics.',
     image: '/project3.png',
-    tags: ['WordPress', 'PHP', 'JavaScript', 'CSS3'],
-    category: ['WordPress'],
-    liveUrl: 'https://example.com',
-    githubUrl: 'https://github.com/deepakkorade',
-  },
-  {
-    id: 5,
-    title: 'High-Throughput API Gateway',
-    description: 'A highly scalable, secure Node API gateway supporting rate limiting, reverse proxy routes, and JSON Web Token authorization.',
-    image: '/project2.png',
-    tags: ['Node.js', 'Express.js', 'TypeScript', 'Redis'],
-    category: ['Node'],
-    liveUrl: 'https://example.com',
-    githubUrl: 'https://github.com/deepakkorade',
-  },
-  {
-    id: 6,
-    title: 'Laravel React ERP System',
-    description: 'An enterprise resource planning portal featuring React frontend views integrated with Laravel API backend services.',
-    image: '/project1.png',
-    tags: ['Laravel', 'React.js', 'Redux', 'MySQL'],
-    category: ['Laravel', 'React'],
-    liveUrl: 'https://example.com',
+    tags: ['React 18', 'TypeScript', 'Redux Toolkit', 'Tailwind', 'Mantine UI', 'ApexCharts'],
+    category: ['React'],
+    liveUrl: 'https://www.deccanwheels.com/',
     githubUrl: 'https://github.com/deepakkorade',
   },
 ];
 
-const CATEGORIES: ('All' | 'React' | 'Node' | 'Laravel' | 'WordPress')[] = [
+const CATEGORIES: ('All' | 'React' | 'Node' | 'Laravel')[] = [
   'All',
   'React',
   'Node',
   'Laravel',
-  'WordPress',
 ];
 
 export const Projects: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState<'All' | 'React' | 'Node' | 'Laravel' | 'WordPress'>('All');
+  const [activeFilter, setActiveFilter] = useState<'All' | 'React' | 'Node' | 'Laravel'>('All');
 
   const filteredProjects = PROJECTS_DATA.filter((project) => {
     if (activeFilter === 'All') return true;
-    return project.category.includes(activeFilter);
+    return project.category.includes(activeFilter as any);
   });
 
   return (

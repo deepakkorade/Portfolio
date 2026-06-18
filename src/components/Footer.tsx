@@ -40,10 +40,10 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="border-t border-border-light dark:border-border-dark bg-white dark:bg-bg-dark py-12 relative overflow-hidden">
+    <footer className="border-t border-border-light dark:border-border-dark bg-white dark:bg-bg-dark py-12 relative">
       
       {/* Scroll to Top Trigger */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
         <button
           onClick={scrollToTop}
           className="p-3.5 rounded-full bg-accent-purple text-white hover:bg-purple-600 transition-all shadow-lg shadow-purple-500/25 scale-100 hover:scale-105 active:scale-95 flex items-center justify-center interactive-hover"

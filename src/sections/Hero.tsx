@@ -5,10 +5,10 @@ import { FaWhatsapp, FaReact, FaLaravel, FaNodeJs } from 'react-icons/fa';
 
 // Custom typing animation hook
 const TYPING_STRINGS = [
+  'Full Stack Developer',
   'React Developer',
-  'Node.js Developer',
   'Laravel Developer',
-  'WordPress Developer',
+  'Node.js Developer',
 ];
 
 const TypingAnimation: React.FC = () => {
@@ -90,7 +90,7 @@ export const Hero: React.FC = () => {
           </h2>
 
           <p className="text-base sm:text-lg text-text-light-secondary dark:text-text-dark-secondary mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-            A passionate Full Stack Developer specializing in building robust, interactive web applications with React, Node.js, Laravel, and WordPress. Bridging elegant frontend interfaces with efficient backend systems.
+            Full Stack Developer with 1+ year of experience building scalable web applications using React, Laravel, Node.js, Python (FastAPI), and MySQL. Skilled in responsive UI development, REST API integration, authentication systems, and database-driven workflows.
           </p>
 
           {/* Action Buttons */}
