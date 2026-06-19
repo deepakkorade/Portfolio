@@ -3,30 +3,94 @@ import { FiGithub, FiLinkedin, FiMail, FiArrowUp } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
 export const Footer: React.FC = () => {
-  const [visitorCount, setVisitorCount] = useState(248);
-  const [downloadCount, setDownloadCount] = useState(54);
+  const [visitorCount, setVisitorCount] = useState<number>(() => 
+    parseInt(localStorage.getItem('visitorCount') || '248', 10)
+  );
+  const [downloadCount, setDownloadCount] = useState<number>(() => 
+    parseInt(localStorage.getItem('downloadCount') || '54', 10)
+  );
 
   useEffect(() => {
-    // Visitor counter simulation
+    const namespace = 'deepakkorade-portfolio';
     const hasVisited = sessionStorage.getItem('hasVisited');
-    let savedVisitors = parseInt(localStorage.getItem('visitorCount') || '248', 10);
-    
-    if (!hasVisited) {
-      savedVisitors += 1;
-      localStorage.setItem('visitorCount', savedVisitors.toString());
-      sessionStorage.setItem('hasVisited', 'true');
-    }
-    setVisitorCount(savedVisitors);
 
-    // Resume downloads tracker
-    const savedDownloads = parseInt(localStorage.getItem('downloadCount') || '54', 10);
-    setDownloadCount(savedDownloads);
+    const fetchVisitorCount = async () => {
+      try {
+        const url = !hasVisited
+          ? `https://api.counterapi.dev/v1/${namespace}/visitors/up`
+          : `https://api.counterapi.dev/v1/${namespace}/visitors/`;
+        
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && typeof data.count === 'number') {
+            setVisitorCount(data.count);
+            localStorage.setItem('visitorCount', data.count.toString());
+            if (!hasVisited) {
+              sessionStorage.setItem('hasVisited', 'true');
+            }
+          }
+        } else if (!hasVisited) {
+          // Fallback increment locally if API is down on first session visit
+          setVisitorCount((prev) => {
+            const next = prev + 1;
+            localStorage.setItem('visitorCount', next.toString());
+            return next;
+          });
+          sessionStorage.setItem('hasVisited', 'true');
+        }
+      } catch (error) {
+        console.error('Failed to sync visitor count:', error);
+        if (!hasVisited) {
+          // Fallback increment locally if API throws on first session visit
+          setVisitorCount((prev) => {
+            const next = prev + 1;
+            localStorage.setItem('visitorCount', next.toString());
+            return next;
+          });
+          sessionStorage.setItem('hasVisited', 'true');
+        }
+      }
+    };
 
-    const handleResumeDownload = () => {
-      let currentDownloads = parseInt(localStorage.getItem('downloadCount') || '54', 10);
-      currentDownloads += 1;
-      localStorage.setItem('downloadCount', currentDownloads.toString());
-      setDownloadCount(currentDownloads);
+    const fetchDownloadCount = async () => {
+      try {
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/downloads/`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && typeof data.count === 'number') {
+            setDownloadCount(data.count);
+            localStorage.setItem('downloadCount', data.count.toString());
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch download count:', error);
+      }
+    };
+
+    fetchVisitorCount();
+    fetchDownloadCount();
+
+    const handleResumeDownload = async () => {
+      // Optimistic update
+      setDownloadCount((prev) => {
+        const next = prev + 1;
+        localStorage.setItem('downloadCount', next.toString());
+        return next;
+      });
+
+      try {
+        const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/downloads/up`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && typeof data.count === 'number') {
+            setDownloadCount(data.count);
+            localStorage.setItem('downloadCount', data.count.toString());
+          }
+        }
+      } catch (error) {
+        console.error('Failed to increment download count on server:', error);
+      }
     };
 
     window.addEventListener('resume-downloaded', handleResumeDownload);

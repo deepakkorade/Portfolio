@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiGithub, FiExternalLink } from 'react-icons/fi';
+import { FiExternalLink } from 'react-icons/fi';
 
 interface Project {
   id: number;
@@ -130,15 +130,6 @@ export const Projects: React.FC = () => {
                   />
                   {/* Hover overlay with action links */}
                   <div className="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-white hover:bg-slate-100 text-slate-950 rounded-full transition-transform hover:scale-110 interactive-hover"
-                      title="GitHub Repository"
-                    >
-                      <FiGithub className="w-5 h-5" />
-                    </a>
                     <a
                       href={project.liveUrl}
                       target="_blank"
