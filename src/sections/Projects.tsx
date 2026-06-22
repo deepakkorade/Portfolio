@@ -83,7 +83,7 @@ export const Projects: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-text-light-secondary dark:text-text-dark-secondary mt-3 max-w-xl mx-auto text-sm sm:text-base"
           >
-            A selective showcase of applications showing Laravel backends, interactive React frontends, Node microservices, and custom WordPress setups.
+            A selective showcase of applications showing Laravel backends, interactive React frontends, Node microservices, and modern database architectures.
           </motion.p>
         </div>
 

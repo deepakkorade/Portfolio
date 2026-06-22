@@ -9,6 +9,7 @@ const TYPING_STRINGS = [
   'React Developer',
   'Laravel Developer',
   'Node.js Developer',
+  'Python Developer',
 ];
 
 const TypingAnimation: React.FC = () => {
@@ -90,7 +91,7 @@ export const Hero: React.FC = () => {
           </h2>
 
           <p className="text-base sm:text-lg text-text-light-secondary dark:text-text-dark-secondary mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-            Full Stack Developer with 1+ year of experience building scalable web applications using React, Laravel, Node.js, Python (FastAPI), and MySQL. Skilled in responsive UI development, REST API integration, authentication systems, and database-driven workflows.
+            Full Stack Developer with 2+ years of experience building scalable web applications using React, Laravel, Node.js, Python (FastAPI), and MySQL. Skilled in responsive UI development, REST API integration, authentication systems, and database-driven workflows.
           </p>
 
           {/* Action Buttons */}
