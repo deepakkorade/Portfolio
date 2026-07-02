@@ -8,6 +8,10 @@ interface Skill {
   colors: { start: string; end: string };
 }
 
+interface SkillsProps {
+  onSelectCategory: (category: 'All' | 'React' | 'Node' | 'Laravel') => void;
+}
+
 const PRIMARY_SKILLS: Skill[] = [
   { name: 'React.js', percentage: 90, gradientId: 'reactGrad', colors: { start: '#a855f7', end: '#3b82f6' } },
   { name: 'Laravel', percentage: 85, gradientId: 'laravelGrad', colors: { start: '#f43f5e', end: '#a855f7' } },
@@ -43,7 +47,7 @@ const SKILL_CATEGORIES = [
   },
 ];
 
-const CircularSkillCard: React.FC<{ skill: Skill }> = ({ skill }) => {
+const CircularSkillCard: React.FC<{ skill: Skill; onClick: () => void }> = ({ skill, onClick }) => {
   const radius = 46;
   const strokeWidth = 7;
   const circumference = 2 * Math.PI * radius;
@@ -54,7 +58,8 @@ const CircularSkillCard: React.FC<{ skill: Skill }> = ({ skill }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6 }}
-      className="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 hover:shadow-xl"
+      onClick={onClick}
+      className="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:scale-[1.03] transition-all duration-300 hover:shadow-xl interactive-hover"
     >
       {/* Light glow overlay */}
       <div className="absolute inset-0 bg-gradient-to-tr from-accent-purple/5 to-accent-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -111,7 +116,46 @@ const CircularSkillCard: React.FC<{ skill: Skill }> = ({ skill }) => {
   );
 };
 
-export const Skills: React.FC = () => {
+export const Skills: React.FC<SkillsProps> = ({ onSelectCategory }) => {
+  const mapSkillToCategory = (skillName: string): 'All' | 'React' | 'Node' | 'Laravel' => {
+    const lower = skillName.toLowerCase();
+    if (
+      lower.includes('react') ||
+      lower.includes('typescript') ||
+      lower.includes('javascript') ||
+      lower.includes('redux') ||
+      lower.includes('bootstrap') ||
+      lower.includes('css') ||
+      lower.includes('html') ||
+      lower.includes('frontend')
+    ) {
+      return 'React';
+    }
+    if (lower.includes('laravel') || lower.includes('php') || lower.includes('codeigniter')) {
+      return 'Laravel';
+    }
+    if (
+      lower.includes('node') ||
+      lower.includes('python') ||
+      lower.includes('fastapi') ||
+      lower.includes('mysql') ||
+      lower.includes('database') ||
+      lower.includes('query')
+    ) {
+      return 'Node';
+    }
+    return 'All';
+  };
+
+  const handleSkillClick = (skillName: string) => {
+    const category = mapSkillToCategory(skillName);
+    onSelectCategory(category);
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="skills" className="py-20 relative overflow-hidden">
       <div className="w-[92%] max-w-6xl mx-auto relative z-10">
@@ -134,14 +178,18 @@ export const Skills: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-text-light-secondary dark:text-text-dark-secondary mt-3 max-w-xl mx-auto text-sm sm:text-base"
           >
-            Proficiencies and technologies that drive modern digital solutions, from reactive frontend frameworks to high-performance database architectures.
+            Proficiencies and technologies that drive modern digital solutions, from reactive frontend frameworks to high-performance database architectures (click a skill to filter projects).
           </motion.p>
         </div>
 
         {/* Circular Progress Bars Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-16">
           {PRIMARY_SKILLS.map((skill) => (
-            <CircularSkillCard key={skill.name} skill={skill} />
+            <CircularSkillCard
+              key={skill.name}
+              skill={skill}
+              onClick={() => handleSkillClick(skill.name)}
+            />
           ))}
         </div>
 
@@ -163,7 +211,8 @@ export const Skills: React.FC = () => {
                 {category.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1 text-xs rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/50 dark:hover:bg-slate-800 text-text-light-secondary dark:text-text-dark-secondary hover:text-accent-purple dark:hover:text-accent-purple border border-border-light dark:border-border-dark transition-all duration-200 hover:scale-105 font-medium"
+                    onClick={() => handleSkillClick(skill)}
+                    className="px-3 py-1 text-xs rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/50 dark:hover:bg-slate-800 text-text-light-secondary dark:text-text-dark-secondary hover:text-accent-purple dark:hover:text-accent-purple border border-border-light dark:border-border-dark transition-all duration-200 hover:scale-105 font-medium interactive-hover cursor-pointer"
                   >
                     {skill}
                   </span>
@@ -177,4 +226,5 @@ export const Skills: React.FC = () => {
     </section>
   );
 };
+
 export default Skills;

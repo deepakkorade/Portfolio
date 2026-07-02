@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FiGithub, FiLinkedin, FiMail, FiArrowUp } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import AnimatedCounter from './AnimatedCounter';
 
 export const Footer: React.FC = () => {
   const [visitorCount, setVisitorCount] = useState<number>(() => 
@@ -133,12 +134,12 @@ export const Footer: React.FC = () => {
         <div className="flex gap-6 px-6 py-2.5 rounded-2xl glass-panel text-xs sm:text-sm font-semibold text-text-light-primary dark:text-text-dark-primary select-none">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-accent-cyan animate-pulse" />
-            <span>Visitors: <span className="text-accent-cyan">{visitorCount}</span></span>
+            <span>Visitors: <span className="text-accent-cyan"><AnimatedCounter value={visitorCount} duration={1000} /></span></span>
           </div>
           <div className="w-[1px] bg-border-light dark:bg-border-dark" />
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-accent-purple" />
-            <span>Downloads: <span className="text-accent-purple">{downloadCount}</span></span>
+            <span>Downloads: <span className="text-accent-purple"><AnimatedCounter value={downloadCount} duration={1000} /></span></span>
           </div>
         </div>
 

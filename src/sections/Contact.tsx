@@ -57,7 +57,7 @@ export const Contact: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (err) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

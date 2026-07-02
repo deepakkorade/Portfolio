@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { GitHubCalendar } from 'react-github-calendar';
 import { useTheme } from '../context/ThemeContext';
+import AnimatedCounter from '../components/AnimatedCounter';
 
 export const GitHubActivity: React.FC = () => {
   const { theme } = useTheme();
@@ -43,19 +44,25 @@ export const GitHubActivity: React.FC = () => {
           {/* Stats Bar */}
           <div className="grid grid-cols-3 gap-4 w-full max-w-2xl text-center mb-8 border-b border-border-light dark:border-border-dark pb-6">
             <div>
-              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-purple">35+</span>
+              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-purple">
+                <AnimatedCounter value={35} suffix="+" />
+              </span>
               <span className="text-[10px] sm:text-xs text-text-light-secondary dark:text-text-dark-secondary font-medium">
                 Public Repositories
               </span>
             </div>
             <div>
-              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-cyan">1,450+</span>
+              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-cyan">
+                <AnimatedCounter value={1450} suffix="+" />
+              </span>
               <span className="text-[10px] sm:text-xs text-text-light-secondary dark:text-text-dark-secondary font-medium">
                 Annual Commits
               </span>
             </div>
             <div>
-              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-emerald">24 Days</span>
+              <span className="block text-2xl sm:text-3xl font-extrabold text-accent-emerald">
+                <AnimatedCounter value={24} suffix=" Days" />
+              </span>
               <span className="text-[10px] sm:text-xs text-text-light-secondary dark:text-text-dark-secondary font-medium">
                 Current Streak
               </span>

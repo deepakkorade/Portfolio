@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiExternalLink } from 'react-icons/fi';
+import { FiExternalLink, FiGithub, FiX } from 'react-icons/fi';
 
 interface Project {
   id: number;
@@ -53,12 +53,27 @@ const CATEGORIES: ('All' | 'React' | 'Node' | 'Laravel')[] = [
   'Laravel',
 ];
 
-export const Projects: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState<'All' | 'React' | 'Node' | 'Laravel'>('All');
+interface ProjectsProps {
+  activeFilter: 'All' | 'React' | 'Node' | 'Laravel';
+  setActiveFilter: (filter: 'All' | 'React' | 'Node' | 'Laravel') => void;
+}
+
+export const Projects: React.FC<ProjectsProps> = ({ activeFilter, setActiveFilter }) => {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const filteredProjects = PROJECTS_DATA.filter((project) => {
     if (activeFilter === 'All') return true;
-    return project.category.includes(activeFilter as any);
+    return project.category.includes(activeFilter as 'React' | 'Node' | 'Laravel');
   });
 
   return (
@@ -129,16 +144,33 @@ export const Projects: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {/* Hover overlay with action links */}
-                  <div className="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-accent-purple hover:bg-purple-600 text-white rounded-full transition-transform hover:scale-110 interactive-hover"
-                      title="Live Demo"
+                  <div className="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3">
+                    <div className="flex gap-4">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-accent-purple hover:bg-purple-600 text-white rounded-full transition-transform hover:scale-110 interactive-hover"
+                        title="Live Demo"
+                      >
+                        <FiExternalLink className="w-5 h-5" />
+                      </a>
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-transform hover:scale-110 interactive-hover"
+                        title="GitHub Repository"
+                      >
+                        <FiGithub className="w-5 h-5" />
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => setSelectedProject(project)}
+                      className="px-4 py-2 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl transition-all hover:scale-105 active:scale-95 interactive-hover mt-1"
                     >
-                      <FiExternalLink className="w-5 h-5" />
-                    </a>
+                      Learn More
+                    </button>
                   </div>
                 </div>
 
@@ -171,6 +203,144 @@ export const Projects: React.FC = () => {
         </motion.div>
 
       </div>
+
+      {/* Project Details Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProject(null)}
+              className="absolute inset-0 bg-black backdrop-blur-sm"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-3xl glass-panel rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col max-h-[85vh] bg-white dark:bg-bg-dark border border-border-light dark:border-border-dark"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-light-primary dark:text-text-dark-primary transition-all z-20 scale-100 hover:scale-105 active:scale-95 interactive-hover"
+                aria-label="Close modal"
+              >
+                <FiX className="w-5 h-5" />
+              </button>
+
+              <div className="overflow-y-auto p-6 sm:p-8">
+                {/* Visual Header */}
+                <div className="relative aspect-video rounded-2xl overflow-hidden mb-6 bg-slate-900 border border-border-light dark:border-border-dark">
+                  <img
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex items-end p-6">
+                    <div>
+                      <span className="px-3 py-1 text-xs rounded-full bg-accent-purple text-white font-semibold mb-2 inline-block">
+                        {selectedProject.category.join(' + ')}
+                      </span>
+                      <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                        {selectedProject.title}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xs font-bold text-accent-purple uppercase tracking-wider mb-2">
+                      About the Project
+                    </h4>
+                    <p className="text-sm sm:text-base text-text-light-secondary dark:text-text-dark-secondary leading-relaxed">
+                      {selectedProject.description}
+                    </p>
+                  </div>
+
+                  {/* Highlights/Key Features */}
+                  <div>
+                    <h4 className="text-xs font-bold text-accent-cyan uppercase tracking-wider mb-3">
+                      Key Highlights & Architecture
+                    </h4>
+                    <ul className="list-disc pl-5 text-xs sm:text-sm text-text-light-secondary dark:text-text-dark-secondary space-y-2.5 leading-relaxed">
+                      {selectedProject.id === 1 && (
+                        <>
+                          <li>Built responsive Multi-Branch SaaS architecture supporting independent clinic operations.</li>
+                          <li>Designed a robust normalized relational database containing 40+ tables with soft-deletes.</li>
+                          <li>Implemented custom PRN (Patient Record Number) generation system per branch.</li>
+                          <li>Optimized rendering with TanStack Query (React Query) query-caching and prefetching, improving load times by 40%.</li>
+                          <li>Configured secure JSON Web Token (JWT) authorization alongside detailed Role-Based Access Control (RBAC).</li>
+                        </>
+                      )}
+                      {selectedProject.id === 2 && (
+                        <>
+                          <li>Integrated Mapbox GL mapping systems to pinpoint and render property listings in real-time.</li>
+                          <li>Configured secure end-to-end checkout paths using the Razorpay payment gateway API.</li>
+                          <li>Built OAuth authorization sequences alongside enterprise Recaptcha v3 safety checks.</li>
+                          <li>Developed rich analytics dashboard layouts leveraging dynamic interactive charts.</li>
+                        </>
+                      )}
+                      {selectedProject.id === 3 && (
+                        <>
+                          <li>Structured centralized state sync models using Redux Toolkit and TypeScript interfaces.</li>
+                          <li>Crafted custom layout frameworks with Mantine UI, Tailwind styles, and interactive ApexCharts.</li>
+                          <li>Configured robust data export actions producing spreadsheets and PDFs dynamically.</li>
+                          <li>Implemented internationalization frameworks supporting multiple interface locales.</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+
+                  {/* Tech stack badges */}
+                  <div>
+                    <h4 className="text-xs font-bold text-accent-purple uppercase tracking-wider mb-3">
+                      Technologies & Tools Used
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-accent-purple/10 text-accent-purple dark:bg-accent-purple/20 border border-accent-purple/10"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-border-light dark:border-border-dark">
+                    <a
+                      href={selectedProject.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 rounded-xl bg-accent-purple hover:bg-purple-600 text-white text-sm font-semibold transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20 scale-100 hover:scale-105 active:scale-95 interactive-hover"
+                    >
+                      <FiExternalLink className="w-4 h-4" /> Visit Live Site
+                    </a>
+                    <a
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 rounded-xl glass-panel text-text-light-primary dark:text-text-dark-primary text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-2 scale-100 hover:scale-105 active:scale-95 interactive-hover"
+                    >
+                      <FiGithub className="w-4 h-4" /> View Source Code
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
